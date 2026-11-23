@@ -91,7 +91,6 @@ texting-app/
 ├── backend/
 │   ├── manage.py
 │   ├── requirements.txt
-│   ├── .env.example
 │   ├── .env
 │   ├── config/             # ASGI, WSGI, URLs, Settings
 │   ├── accounts/           # Custom User model, Auth views, Serializers, Tests
@@ -188,29 +187,35 @@ Start your local Redis server on the default port `6379`:
    ```
 
 4. Configure environment variables:
-   Copy `.env.example` to `.env`:
-   ```bash
-   cp .env.example .env
-   ```
-
-   Verify your `.env` settings:
-   ```ini
+   Create a `.env` file in the `backend/` directory (or project root) with the following environment configuration example:
+   ```env
    DEBUG=True
    SECRET_KEY=django-insecure-texting-app-development-key-9db32b65-2aa4-4ef4-9d55
    ALLOWED_HOSTS=*
 
-   # PostgreSQL settings:
+   # PostgreSQL Database Configuration
    DB_ENGINE=django.db.backends.postgresql
    DB_NAME=texting_db
    DB_USER=postgres
    DB_PASSWORD=postgres
    DB_HOST=127.0.0.1
    DB_PORT=5432
-   USE_SQLITE=False
 
-   # Redis settings:
+   # Set to True for local testing without external Postgres server:
+   USE_SQLITE=True
+
+   # Redis Configuration for Django Channels
    REDIS_URL=redis://127.0.0.1:6379/1
-   USE_INMEMORY_CHANNELS=False
+
+   # Set to True for local testing without external Redis server:
+   USE_INMEMORY_CHANNELS=True
+
+   # JWT Lifetime Settings
+   JWT_ACCESS_LIFETIME_MINUTES=60
+   JWT_REFRESH_LIFETIME_DAYS=7
+
+   # Frontend API target (if running frontend separately):
+   VITE_API_URL=http://localhost:8000/api
    ```
 
 5. Run database migrations:

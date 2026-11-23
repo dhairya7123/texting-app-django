@@ -35,11 +35,6 @@ def get_user_from_jwt(token_str):
 
 
 class TicketAuthMiddleware:
-    """
-    Middleware that authenticates WebSocket connections using a single-use ticket
-    generated via /api/auth/ws-ticket/ or falls back to standard JWT token.
-    This protects against exposing long-lived JWTs in WebSocket URLs.
-    """
     def __init__(self, inner):
         self.inner = inner
 

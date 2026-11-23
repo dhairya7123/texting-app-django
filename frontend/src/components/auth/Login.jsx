@@ -33,7 +33,7 @@ export default function Login() {
         <ThemeToggle />
       </div>
 
-      {/* Brand Header */}
+
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '28px' }}>
         <div
           style={{
@@ -59,7 +59,7 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Card */}
+
       <div
         style={{
           width: '100%',

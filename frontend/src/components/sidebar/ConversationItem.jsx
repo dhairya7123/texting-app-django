@@ -7,13 +7,13 @@ export default function ConversationItem({ conversation, isActive, onClick }) {
   const { onlineMap } = useChatStore();
   const isGroup = conversation.type === 'group';
 
-  // For 1-on-1, check other user's online presence
+
   let isOnline = false;
   if (!isGroup && conversation.other_user) {
     isOnline = !!onlineMap[conversation.other_user.id];
   }
 
-  // Format timestamp nicely
+
   const formatTime = (isoString) => {
     if (!isoString) return '';
     const date = new Date(isoString);
@@ -61,7 +61,7 @@ export default function ConversationItem({ conversation, isActive, onClick }) {
         if (!isActive) e.currentTarget.style.backgroundColor = 'transparent';
       }}
     >
-      {/* Avatar */}
+
       <div style={{ position: 'relative', marginRight: '14px' }}>
         <Avatar
           src={conversation.avatar_url}
@@ -88,7 +88,7 @@ export default function ConversationItem({ conversation, isActive, onClick }) {
         )}
       </div>
 
-      {/* Info & Last message */}
+
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '4px' }}>
           <h4

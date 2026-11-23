@@ -11,7 +11,6 @@ from .views import (
 )
 
 urlpatterns = [
-    # Auth endpoints
     path('auth/register/', RegisterView.as_view(), name='auth_register'),
     path('auth/login/', CustomTokenObtainPairView.as_view(), name='auth_login'),
     path('auth/refresh/', TokenRefreshView.as_view(), name='auth_refresh'),
@@ -19,7 +18,6 @@ urlpatterns = [
     path('auth/me/', MeView.as_view(), name='auth_me'),
     path('auth/ws-ticket/', WebSocketTicketView.as_view(), name='auth_ws_ticket'),
 
-    # User endpoints
     path('users/search/', UserSearchView.as_view(), name='users_search'),
     path('users/<uuid:id>/', UserDetailView.as_view(), name='user_detail'),
 ]

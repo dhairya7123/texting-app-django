@@ -62,7 +62,7 @@ export default function Register() {
         <ThemeToggle />
       </div>
 
-      {/* Brand Header */}
+
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
         <div
           style={{
@@ -88,7 +88,7 @@ export default function Register() {
         </div>
       </div>
 
-      {/* Card */}
+
       <div
         style={{
           width: '100%',

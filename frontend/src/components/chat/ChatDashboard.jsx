@@ -19,13 +19,13 @@ export default function ChatDashboard() {
   useEffect(() => {
     if (!user) return;
 
-    // 1. Load initial conversations list
+
     loadConversations();
 
-    // 2. Connect WebSocket
+
     wsService.connect();
 
-    // 3. Register real-time event handlers
+
     const unsubMsgNew = wsService.on('message.new', (data) => {
       if (data.message) {
         handleIncomingMessage(data.message);

@@ -54,7 +54,6 @@ class MessageSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'sender', 'is_edited', 'is_deleted', 'created_at', 'updated_at']
 
     def get_overall_status(self, obj):
-        # Calculate overall status from receipts for the sender
         receipts = obj.receipts.all()
         if not receipts:
             return 'sent'

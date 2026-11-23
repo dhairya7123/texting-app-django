@@ -29,10 +29,8 @@ class RealtimeWebSocketTests(TransactionTestCase):
         ConversationMember.objects.create(conversation=self.conversation, user=self.user2)
 
     async def test_websocket_ticket_auth_and_messaging(self):
-        # 1. Create ticket for user1
         ticket = await database_sync_to_async(WebSocketTicket.create_ticket)(self.user1)
 
-        # 2. Connect with ticket
         communicator = WebsocketCommunicator(
             application,
             f"/ws/chat/?ticket={ticket.ticket}"
@@ -40,7 +38,6 @@ class RealtimeWebSocketTests(TransactionTestCase):
         connected, _ = await communicator.connect()
         self.assertTrue(connected)
 
-        # 3. Send message.send
         await communicator.send_json_to({
             'type': 'message.send',
             'conversation_id': str(self.conversation.id),
@@ -48,19 +45,16 @@ class RealtimeWebSocketTests(TransactionTestCase):
             'idempotency_key': 'ws-key-1'
         })
 
-        # 4. Receive message.new
         response = await communicator.receive_json_from()
         self.assertEqual(response['type'], 'message.new')
         self.assertEqual(response['message']['text'], 'Hello via WebSocket!')
         self.assertEqual(response['message']['sender']['username'], 'wsuser1')
 
-        # 5. Send typing.start
         await communicator.send_json_to({
             'type': 'typing.start',
             'conversation_id': str(self.conversation.id)
         })
 
-        # 6. Disconnect
         await communicator.disconnect()
 
     async def test_unauthenticated_websocket_connection_rejected(self):

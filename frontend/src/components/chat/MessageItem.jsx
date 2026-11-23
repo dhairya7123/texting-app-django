@@ -72,7 +72,7 @@ export default function MessageItem({
           wordBreak: 'break-word',
         }}
       >
-        {/* Sender name for group chats if incoming */}
+
         {!isMine && isGroup && message.sender && (
           <div
             style={{
@@ -86,7 +86,7 @@ export default function MessageItem({
           </div>
         )}
 
-        {/* Action dropdown button on hover */}
+
         {isMine && !message.is_deleted && (
           <button
             onClick={() => setShowMenu(!showMenu)}
@@ -107,7 +107,7 @@ export default function MessageItem({
           </button>
         )}
 
-        {/* Dropdown Menu */}
+
         {showMenu && (
           <div
             style={{
@@ -168,7 +168,7 @@ export default function MessageItem({
           </div>
         )}
 
-        {/* Attachments preview */}
+
         {message.attachments && message.attachments.length > 0 && !message.is_deleted && (
           <div style={{ marginBottom: '6px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
             {message.attachments.map((att) => (
@@ -244,7 +244,7 @@ export default function MessageItem({
           </div>
         )}
 
-        {/* Message Text */}
+
         {message.is_deleted ? (
           <div
             style={{
@@ -268,7 +268,7 @@ export default function MessageItem({
           )
         )}
 
-        {/* Timestamp, Edited status & Ticks */}
+
         <div
           style={{
             display: 'flex',

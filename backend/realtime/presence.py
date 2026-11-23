@@ -7,10 +7,6 @@ User = get_user_model()
 
 @database_sync_to_async
 def user_connected(user_id):
-    """
-    Increments connection count for a user.
-    Returns True if the user was previously offline (connection count went from 0 to 1).
-    """
     cache_key = f"user_connections_{user_id}"
     try:
         count = cache.get(cache_key, 0)
@@ -26,10 +22,6 @@ def user_connected(user_id):
 
 @database_sync_to_async
 def user_disconnected(user_id):
-    """
-    Decrements connection count for a user.
-    Returns (is_now_offline, last_seen_iso).
-    """
     cache_key = f"user_connections_{user_id}"
     now = timezone.now()
     try:

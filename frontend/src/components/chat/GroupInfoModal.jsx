@@ -41,7 +41,7 @@ export default function GroupInfoModal({ isOpen, onClose, conversation }) {
     setIsAddingMember(true);
     try {
       const res = await api.get('/users/search/');
-      // Filter out users already in the group
+
       const existingIds = new Set(members.map((m) => m.user?.id));
       const filtered = res.data.filter((u) => !existingIds.has(u.id));
       setPotentialUsers(filtered);
@@ -57,7 +57,7 @@ export default function GroupInfoModal({ isOpen, onClose, conversation }) {
       await api.post(`/conversations/${conversation.id}/members/`, {
         user_ids: [selectedUserId],
       });
-      // Refresh members
+
       const res = await api.get(`/conversations/${conversation.id}/members/`);
       setMembers(res.data);
       setIsAddingMember(false);
@@ -119,7 +119,7 @@ export default function GroupInfoModal({ isOpen, onClose, conversation }) {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+
         <div
           style={{
             padding: '16px 20px',
@@ -151,7 +151,7 @@ export default function GroupInfoModal({ isOpen, onClose, conversation }) {
           </button>
         </div>
 
-        {/* Group Details */}
+
         <div
           style={{
             padding: '20px',
@@ -171,7 +171,7 @@ export default function GroupInfoModal({ isOpen, onClose, conversation }) {
           </span>
         </div>
 
-        {/* Members Header & Add Action */}
+
         <div
           style={{
             padding: '12px 20px',
@@ -206,7 +206,7 @@ export default function GroupInfoModal({ isOpen, onClose, conversation }) {
           )}
         </div>
 
-        {/* Inline Add Member Picker */}
+
         {isAddingMember && (
           <div
             style={{
@@ -273,7 +273,7 @@ export default function GroupInfoModal({ isOpen, onClose, conversation }) {
           </div>
         )}
 
-        {/* Member List */}
+
         <div style={{ flex: 1, overflowY: 'auto', padding: '6px 0', minHeight: '160px' }}>
           {isLoading ? (
             <div style={{ display: 'flex', justifyContent: 'center', padding: '32px' }}>
@@ -356,7 +356,7 @@ export default function GroupInfoModal({ isOpen, onClose, conversation }) {
           )}
         </div>
 
-        {/* Footer: Leave Group */}
+
         <div
           style={{
             padding: '14px 20px',

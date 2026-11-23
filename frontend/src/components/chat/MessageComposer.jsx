@@ -32,7 +32,7 @@ export default function MessageComposer({
   const handleTextChange = (e) => {
     setText(e.target.value);
 
-    // Emit typing indicator
+
     if (!editingMessage && conversationId) {
       wsService.startTyping(conversationId);
       clearTimeout(typingTimeoutRef.current);
@@ -94,18 +94,18 @@ export default function MessageComposer({
     const attachmentIds = attachments.map((a) => a.id);
     sendMessage(trimmed, attachmentIds);
 
-    // Clear state
+
     setText('');
     setAttachments([]);
     setUploadError('');
 
-    // Stop typing immediately on send
+
     if (conversationId) {
       clearTimeout(typingTimeoutRef.current);
       wsService.stopTyping(conversationId);
     }
 
-    // Reset textarea height
+
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
     }
@@ -130,7 +130,7 @@ export default function MessageComposer({
         flexShrink: 0,
       }}
     >
-      {/* Editing Banner */}
+
       {editingMessage && (
         <div
           style={{
@@ -162,7 +162,7 @@ export default function MessageComposer({
         </div>
       )}
 
-      {/* Attachment Previews */}
+
       {attachments.length > 0 && (
         <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', padding: '4px 0' }}>
           {attachments.map((att) => (
@@ -207,9 +207,9 @@ export default function MessageComposer({
         </div>
       )}
 
-      {/* Input Row */}
+
       <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px' }}>
-        {/* Paperclip */}
+
         {!editingMessage && (
           <div>
             <button
@@ -243,7 +243,7 @@ export default function MessageComposer({
           </div>
         )}
 
-        {/* Text Input */}
+
         <div
           style={{
             flex: 1,
@@ -277,7 +277,7 @@ export default function MessageComposer({
           />
         </div>
 
-        {/* Send Button */}
+
         <button
           onClick={handleSend}
           disabled={(!text.trim() && attachments.length === 0) || isUploading}

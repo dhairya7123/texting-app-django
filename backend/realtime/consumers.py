@@ -31,14 +31,12 @@ def save_message_and_receipts(user, conversation_id, text, idempotency_key=None,
     if not conversation:
         return None, None
 
-    # Idempotency check
     if idempotency_key:
         existing = Message.objects.filter(
             conversation=conversation,
             idempotency_key=idempotency_key
         ).select_related('sender').first()
         if existing:
-            # Build payload
             return serialize_msg(existing), False
 
     with transaction.atomic():
@@ -50,14 +48,12 @@ def save_message_and_receipts(user, conversation_id, text, idempotency_key=None,
             idempotency_key=idempotency_key
         )
 
-        # Attach attachments if provided
         if attachment_ids:
             Attachment.objects.filter(
                 id__in=attachment_ids,
                 uploader=user
             ).update(message=msg, conversation=conversation)
 
-        # Create sent receipts for other members
         other_members = conversation.memberships.exclude(user=user)
         receipts = [
             MessageReceipt(message=msg, user=member.user, status='sent')
@@ -155,7 +151,6 @@ def mark_read(user, message_id, conversation_id=None):
             user=user,
             defaults={'status': 'read', 'timestamp': now}
         )
-        # Mark all prior unread messages in this conversation as read
         MessageReceipt.objects.filter(
             message__conversation_id=conv_id,
             user=user,
@@ -194,10 +189,8 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         self.user_group = f"user_{self.user.id}"
         await self.channel_layer.group_add(self.user_group, self.channel_name)
 
-        # Accept connection first
         await self.accept()
 
-        # Join all conversations the user is a member of
         self.joined_conversations = set()
         conv_ids = await get_user_conversations(self.user)
         for cid in conv_ids:
@@ -205,10 +198,8 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             await self.channel_layer.group_add(group_name, self.channel_name)
             self.joined_conversations.add(str(cid))
 
-        # Handle user presence (multi-device aware)
         just_came_online = await user_connected(self.user.id)
         if just_came_online:
-            # Broadcast presence online to all user's conversations
             presence_data = {
                 'type': 'chat_presence_update',
                 'user_id': str(self.user.id),
@@ -221,15 +212,12 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     async def disconnect(self, close_code):
         if hasattr(self, 'user') and self.user.is_authenticated:
-            # Leave user group
             await self.channel_layer.group_discard(self.user_group, self.channel_name)
 
-            # Leave conversation groups
             if hasattr(self, 'joined_conversations'):
                 for cid in self.joined_conversations:
                     await self.channel_layer.group_discard(f"conversation_{cid}", self.channel_name)
 
-            # Handle presence disconnect
             just_went_offline, last_seen = await user_disconnected(self.user.id)
             if just_went_offline and hasattr(self, 'joined_conversations'):
                 presence_data = {
@@ -283,7 +271,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             )
 
             if msg_payload:
-                # Ensure current channel is in conversation group
                 group_name = f"conversation_{cid}"
                 if str(cid) not in self.joined_conversations:
                     await self.channel_layer.group_add(group_name, self.channel_name)
@@ -357,7 +344,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                         }
                     )
 
-    # Group message handlers (Server to Client)
     async def chat_message_new(self, event):
         await self.send_json({
             'type': 'message.new',
@@ -390,7 +376,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         })
 
     async def chat_typing_update(self, event):
-        # Don't echo typing indicators back to the sender
         if event.get('user_id') != str(self.user.id):
             await self.send_json({
                 'type': 'typing.update',

@@ -37,23 +37,19 @@ class FullRealtimeIntegrationTests(TransactionTestCase):
             display_name='Charlie Chaplin'
         )
 
-        # 1-to-1 conversation between Alice and Bob
         self.direct_conv = Conversation.objects.create(type='direct')
         ConversationMember.objects.create(conversation=self.direct_conv, user=self.alice)
         ConversationMember.objects.create(conversation=self.direct_conv, user=self.bob)
 
-        # Group conversation with Alice, Bob, and Charlie
         self.group_conv = Conversation.objects.create(type='group', name='The A-Team')
         ConversationMember.objects.create(conversation=self.group_conv, user=self.alice, role='admin')
         ConversationMember.objects.create(conversation=self.group_conv, user=self.bob, role='member')
         ConversationMember.objects.create(conversation=self.group_conv, user=self.charlie, role='member')
 
     async def test_full_two_user_messaging_lifecycle(self):
-        # 1. Obtain tickets for Alice and Bob
         ticket_alice = await database_sync_to_async(WebSocketTicket.create_ticket)(self.alice)
         ticket_bob = await database_sync_to_async(WebSocketTicket.create_ticket)(self.bob)
 
-        # 2. Open WebSocket connections for both
         comm_alice = WebsocketCommunicator(application, f"/ws/chat/?ticket={ticket_alice.ticket}")
         comm_bob = WebsocketCommunicator(application, f"/ws/chat/?ticket={ticket_bob.ticket}")
 
@@ -62,7 +58,6 @@ class FullRealtimeIntegrationTests(TransactionTestCase):
         self.assertTrue(connected_a)
         self.assertTrue(connected_b)
 
-        # 3. Alice sends a real-time message to the direct conversation
         await comm_alice.send_json_to({
             'type': 'message.send',
             'conversation_id': str(self.direct_conv.id),
@@ -70,57 +65,47 @@ class FullRealtimeIntegrationTests(TransactionTestCase):
             'idempotency_key': 'alice-msg-1'
         })
 
-        # Alice receives echo of her sent message
         alice_received = await receive_event(comm_alice, 'message.new')
         self.assertEqual(alice_received['type'], 'message.new')
         self.assertEqual(alice_received['message']['text'], 'Hi Bob, how are you?')
         msg_id = alice_received['message']['id']
 
-        # Bob receives the message in real time
         bob_received = await receive_event(comm_bob, 'message.new')
         self.assertEqual(bob_received['type'], 'message.new')
         self.assertEqual(bob_received['message']['text'], 'Hi Bob, how are you?')
         self.assertEqual(bob_received['message']['sender']['username'], 'alice')
 
-        # 4. Bob sends delivery receipt
         await comm_bob.send_json_to({
             'type': 'message.delivered',
             'message_id': msg_id,
             'conversation_id': str(self.direct_conv.id)
         })
 
-        # Alice receives delivery update
         alice_delivery_update = await receive_event(comm_alice, 'message.delivered')
         self.assertEqual(alice_delivery_update['receipt']['status'], 'delivered')
 
-        # 5. Bob marks message as read
         await comm_bob.send_json_to({
             'type': 'message.read',
             'message_id': msg_id,
             'conversation_id': str(self.direct_conv.id)
         })
 
-        # Alice receives read receipt
         alice_read_update = await receive_event(comm_alice, 'message.read')
         self.assertEqual(alice_read_update['receipt']['status'], 'read')
 
-        # 6. Bob starts typing
         await comm_bob.send_json_to({
             'type': 'typing.start',
             'conversation_id': str(self.direct_conv.id)
         })
 
-        # Alice receives typing indicator
         alice_typing = await receive_event(comm_alice, 'typing.update')
         self.assertEqual(alice_typing['username'], 'bob')
         self.assertTrue(alice_typing['is_typing'])
 
-        # Clean disconnect
         await comm_alice.disconnect()
         await comm_bob.disconnect()
 
     async def test_group_broadcast_messaging(self):
-        # Obtain tickets
         t_alice = await database_sync_to_async(WebSocketTicket.create_ticket)(self.alice)
         t_bob = await database_sync_to_async(WebSocketTicket.create_ticket)(self.bob)
         t_charlie = await database_sync_to_async(WebSocketTicket.create_ticket)(self.charlie)
@@ -133,7 +118,6 @@ class FullRealtimeIntegrationTests(TransactionTestCase):
         await comm_bob.connect()
         await comm_charlie.connect()
 
-        # Alice sends message to group
         await comm_alice.send_json_to({
             'type': 'message.send',
             'conversation_id': str(self.group_conv.id),
@@ -141,11 +125,9 @@ class FullRealtimeIntegrationTests(TransactionTestCase):
             'idempotency_key': 'group-msg-1'
         })
 
-        # Alice gets echo
         a_msg = await receive_event(comm_alice, 'message.new')
         self.assertEqual(a_msg['type'], 'message.new')
 
-        # Both Bob and Charlie receive the group message
         b_msg = await receive_event(comm_bob, 'message.new')
         self.assertEqual(b_msg['type'], 'message.new')
         self.assertEqual(b_msg['message']['text'], 'Welcome everyone to The A-Team!')

@@ -5,14 +5,14 @@ import wsService from '../services/websocket';
 export const useChatStore = create((set, get) => ({
   conversations: [],
   activeConversationId: null,
-  messages: {}, // { [conversationId]: [ ...messages ] }
-  hasMoreMessages: {}, // { [conversationId]: boolean }
+  messages: {},
+  hasMoreMessages: {},
   isLoadingConversations: false,
   isLoadingMessages: false,
-  typingMap: {}, // { [conversationId]: { [userId]: username } }
-  onlineMap: {}, // { [userId]: boolean }
-  lastSeenMap: {}, // { [userId]: string }
-  isSidebarOpen: true, // For responsive mobile view
+  typingMap: {},
+  onlineMap: {},
+  lastSeenMap: {},
+  isSidebarOpen: true,
 
   setSidebarOpen: (isOpen) => set({ isSidebarOpen: isOpen }),
 
@@ -21,8 +21,8 @@ export const useChatStore = create((set, get) => ({
     try {
       const res = await api.get('/conversations/');
       const convs = res.data;
-      
-      // Update online status map from loaded members
+
+
       const onlineMap = { ...get().onlineMap };
       const lastSeenMap = { ...get().lastSeenMap };
       convs.forEach(c => {
@@ -98,7 +98,7 @@ export const useChatStore = create((set, get) => ({
 
     const idempotencyKey = `msg_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 
-    // Try sending through WebSocket for lowest latency
+
     const wsSent = wsService.sendMessage(
       activeConversationId,
       text,
@@ -106,7 +106,7 @@ export const useChatStore = create((set, get) => ({
       attachmentIds
     );
 
-    // Fallback to REST API if WS not open
+
     if (!wsSent) {
       try {
         const res = await api.post(`/conversations/${activeConversationId}/messages/`, {
@@ -164,7 +164,7 @@ export const useChatStore = create((set, get) => ({
   markConversationRead: async (conversationId) => {
     try {
       wsService.sendRead(null, conversationId);
-      // Also update local unread count
+
       set((state) => ({
         conversations: state.conversations.map((c) =>
           c.id === conversationId ? { ...c, unread_count: 0 } : c
@@ -222,12 +222,12 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
-  // Real-time Event Handlers
+
   handleIncomingMessage: (msg) => {
     const convId = msg.conversation;
     set((state) => {
       const convMsgs = state.messages[convId] || [];
-      // Prevent duplicates by ID or idempotency key
+
       const exists = convMsgs.some(
         (m) => m.id === msg.id || (msg.idempotency_key && m.idempotency_key === msg.idempotency_key)
       );
@@ -235,7 +235,7 @@ export const useChatStore = create((set, get) => ({
         ? convMsgs.map((m) => (m.id === msg.id || m.idempotency_key === msg.idempotency_key ? msg : m))
         : [...convMsgs, msg];
 
-      // Update conversations list order and last message
+
       const nextConvs = state.conversations.map((c) => {
         if (c.id === convId) {
           const isCurrentActive = state.activeConversationId === convId;
@@ -256,7 +256,7 @@ export const useChatStore = create((set, get) => ({
         return c;
       });
 
-      // Sort conversations so the one with newest message is at top
+
       nextConvs.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
 
       return {
@@ -268,12 +268,12 @@ export const useChatStore = create((set, get) => ({
       };
     });
 
-    // If this conversation is currently open, notify server that we read it
+
     const { activeConversationId } = get();
     if (activeConversationId === convId) {
       wsService.sendRead(msg.id, convId);
     } else {
-      // Send delivered notification
+
       wsService.sendDelivered(msg.id, convId);
     }
   },

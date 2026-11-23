@@ -52,7 +52,7 @@ export default function Sidebar() {
           zIndex: 10,
         }}
       >
-        {/* User Profile Header */}
+
         <div
           style={{
             padding: '12px 16px',
@@ -100,7 +100,7 @@ export default function Sidebar() {
             </div>
           </div>
 
-          {/* Action Icons */}
+
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
             <ThemeToggle />
 
@@ -178,7 +178,7 @@ export default function Sidebar() {
           </div>
         </div>
 
-        {/* Search Bar */}
+
         <div style={{ padding: '8px 14px', backgroundColor: 'var(--bg-primary)' }}>
           <div
             style={{
@@ -224,7 +224,7 @@ export default function Sidebar() {
           </div>
         </div>
 
-        {/* Conversation List */}
+
         <div style={{ flex: 1, overflowY: 'auto' }}>
           {isLoadingConversations && conversations.length === 0 ? (
             <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}>
@@ -264,7 +264,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* Modals */}
+
       <UserSearchModal isOpen={isSearchModalOpen} onClose={() => setIsSearchModalOpen(false)} />
       <NewGroupModal isOpen={isGroupModalOpen} onClose={() => setIsGroupModalOpen(false)} />
       <ProfileModal isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} />

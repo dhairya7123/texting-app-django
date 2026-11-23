@@ -11,9 +11,7 @@ from .serializers import AttachmentSerializer
 from conversations.models import Conversation
 
 ALLOWED_MIME_TYPES = [
-    # Images
     'image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml',
-    # Documents
     'application/pdf', 'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'application/vnd.ms-excel',
@@ -21,7 +19,7 @@ ALLOWED_MIME_TYPES = [
     'text/plain', 'text/csv', 'application/zip', 'application/x-zip-compressed'
 ]
 
-MAX_FILE_SIZE = getattr(settings, 'MAX_UPLOAD_SIZE', 10 * 1024 * 1024)  # 10MB
+MAX_FILE_SIZE = getattr(settings, 'MAX_UPLOAD_SIZE', 10 * 1024 * 1024)
 
 class AttachmentUploadView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -42,21 +40,18 @@ class AttachmentUploadView(APIView):
             id=conversation_id
         )
 
-        # File size validation
         if uploaded_file.size > MAX_FILE_SIZE:
             return Response(
                 {'error': f'File size exceeds limit of {MAX_FILE_SIZE // (1024 * 1024)}MB.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # MIME type detection & validation
         content_type = uploaded_file.content_type
         if not content_type or content_type == 'application/octet-stream':
             guessed_type, _ = mimetypes.guess_type(uploaded_file.name)
             if guessed_type:
                 content_type = guessed_type
 
-        # Check for disallowed dangerous file extensions
         ext = os.path.splitext(uploaded_file.name)[1].lower()
         if ext in ['.exe', '.bat', '.sh', '.dll', '.msi', '.vbs', '.cmd']:
             return Response({'error': 'File type is not permitted for security reasons.'}, status=status.HTTP_400_BAD_REQUEST)

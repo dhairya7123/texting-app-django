@@ -46,7 +46,6 @@ class ConversationListCreateView(APIView):
 
         if conv_type == 'direct':
             recipient_id = data['recipient_id']
-            # Check for existing direct conversation between request.user and recipient
             existing_conv = Conversation.objects.filter(
                 type='direct',
                 memberships__user=request.user
@@ -95,13 +94,11 @@ class ConversationListCreateView(APIView):
                     name=name,
                     created_by=request.user
                 )
-                # Add creator as admin
                 ConversationMember.objects.create(
                     conversation=conversation,
                     user=request.user,
                     role='admin'
                 )
-                # Add other members
                 for uid in member_ids:
                     if str(uid) != str(request.user.id):
                         u = User.objects.filter(id=uid).first()
@@ -136,7 +133,6 @@ class ConversationDetailView(APIView):
     def patch(self, request, pk):
         conversation = self.get_conversation(pk, request.user)
         if conversation.type == 'group':
-            # Check admin permission
             membership = conversation.memberships.filter(user=request.user).first()
             if not membership or membership.role != 'admin':
                 return Response(
@@ -157,12 +153,10 @@ class ConversationDetailView(APIView):
 
     def delete(self, request, pk):
         conversation = self.get_conversation(pk, request.user)
-        # Remove requesting user membership
         membership = conversation.memberships.filter(user=request.user).first()
         if membership:
             membership.delete()
 
-        # If direct conversation or group with no remaining members, clean up
         if conversation.memberships.count() == 0:
             conversation.delete()
 
@@ -214,7 +208,6 @@ class ConversationMembersView(APIView):
                 )
                 added_users.append(u.username)
 
-        # Update conversation timestamp
         conversation.save(update_fields=['updated_at'])
 
         return Response({
@@ -240,7 +233,6 @@ class ConversationMemberDetailView(APIView):
         current_membership = conversation.memberships.filter(user=request.user).first()
         target_membership = get_object_or_404(conversation.memberships, user_id=user_id)
 
-        # Allow if user is removing themselves OR if current user is admin
         is_self = str(request.user.id) == str(user_id)
         is_admin = current_membership and current_membership.role == 'admin'
 

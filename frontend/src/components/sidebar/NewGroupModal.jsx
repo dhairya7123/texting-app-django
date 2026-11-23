@@ -86,7 +86,7 @@ export default function NewGroupModal({ isOpen, onClose }) {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+
         <div
           style={{
             padding: '16px 20px',
@@ -119,7 +119,7 @@ export default function NewGroupModal({ isOpen, onClose }) {
         </div>
 
         <form onSubmit={handleCreate} style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
-          {/* Group Name Input */}
+
           <div style={{ padding: '16px 20px', backgroundColor: 'var(--bg-panel)' }}>
             <label style={{ display: 'block', fontSize: '12px', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: '6px' }}>
               Group Name *
@@ -143,7 +143,7 @@ export default function NewGroupModal({ isOpen, onClose }) {
             />
           </div>
 
-          {/* Members Selection List */}
+
           <div style={{ padding: '10px 20px 4px', fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
             Select Members ({selectedUserIds.length} selected)
           </div>
@@ -208,7 +208,7 @@ export default function NewGroupModal({ isOpen, onClose }) {
             )}
           </div>
 
-          {/* Footer Actions */}
+
           <div
             style={{
               padding: '14px 20px',

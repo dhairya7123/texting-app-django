@@ -1,8 +1,8 @@
 :root {
-  /* WhatsApp-inspired Theme Tokens */
+
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  
-  /* Light Theme */
+
+
   --bg-primary: #ffffff;
   --bg-secondary: #f0f2f5;
   --bg-panel: #f7f8fa;
@@ -18,18 +18,18 @@
   --accent-primary: #00a884;
   --accent-primary-hover: #02906f;
   --accent-secondary: #008069;
-  
+
   --border-subtle: #e9edef;
   --border-strong: #d1d7db;
 
-  /* Bubbles */
+
   --bubble-outgoing: #d9fdd3;
   --bubble-outgoing-text: #111b21;
   --bubble-incoming: #ffffff;
   --bubble-incoming-text: #111b21;
   --bubble-meta: #667781;
 
-  /* Status Colors */
+
   --status-sent: #8696a0;
   --status-delivered: #8696a0;
   --status-read: #53bdeb;
@@ -37,7 +37,7 @@
   --danger: #ea4335;
   --danger-hover: #d93025;
 
-  /* Shadows */
+
   --shadow-sm: 0 1px 2px rgba(11, 20, 26, 0.08);
   --shadow-md: 0 4px 12px rgba(11, 20, 26, 0.12);
   --shadow-lg: 0 12px 28px rgba(11, 20, 26, 0.2);
@@ -68,7 +68,7 @@
   --border-subtle: #222e35;
   --border-strong: #374248;
 
-  /* Bubbles */
+
   --bubble-outgoing: #005c4b;
   --bubble-outgoing-text: #e9edef;
   --bubble-incoming: #202c33;
@@ -109,7 +109,7 @@ body {
   display: flex;
 }
 
-/* Custom Scrollbars */
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

@@ -31,7 +31,6 @@ class MessagingTests(TestCase):
             display_name='User Three'
         )
 
-        # Create direct conversation between user1 and user2
         self.conversation = Conversation.objects.create(type='direct')
         ConversationMember.objects.create(conversation=self.conversation, user=self.user1)
         ConversationMember.objects.create(conversation=self.conversation, user=self.user2)
@@ -49,16 +48,13 @@ class MessagingTests(TestCase):
         msg_id = res1.data['id']
         self.assertEqual(res1.data['text'], 'Hello Bob!')
 
-        # Send same idempotency key again -> should return existing message
         res2 = self.client.post(url, payload, format='json')
         self.assertEqual(res2.status_code, status.HTTP_200_OK)
         self.assertEqual(res2.data['id'], msg_id)
 
-        # Verify only one message in database
         self.assertEqual(Message.objects.filter(conversation=self.conversation).count(), 1)
 
     def test_message_history_and_pagination(self):
-        # Create 5 messages
         for i in range(5):
             Message.objects.create(
                 conversation=self.conversation,
@@ -81,19 +77,16 @@ class MessagingTests(TestCase):
         )
         url = reverse('message_detail', kwargs={'message_id': msg.id})
 
-        # Non-sender cannot edit
         self.client.force_authenticate(user=self.user2)
         res_fail = self.client.patch(url, {'text': 'Hacked'}, format='json')
         self.assertEqual(res_fail.status_code, status.HTTP_403_FORBIDDEN)
 
-        # Sender can edit
         self.client.force_authenticate(user=self.user1)
         res_edit = self.client.patch(url, {'text': 'Updated text'}, format='json')
         self.assertEqual(res_edit.status_code, status.HTTP_200_OK)
         self.assertEqual(res_edit.data['text'], 'Updated text')
         self.assertTrue(res_edit.data['is_edited'])
 
-        # Sender deletes message
         res_del = self.client.delete(url)
         self.assertEqual(res_del.status_code, status.HTTP_200_OK)
         self.assertEqual(res_del.data['text'], 'This message was deleted')
@@ -105,10 +98,8 @@ class MessagingTests(TestCase):
             sender=self.user1,
             text="Unread message"
         )
-        # Create initial sent receipt for user2
         MessageReceipt.objects.create(message=msg, user=self.user2, status='sent')
 
-        # User2 marks message as read
         self.client.force_authenticate(user=self.user2)
         read_url = reverse('message_read', kwargs={'message_id': msg.id})
         res = self.client.post(read_url)

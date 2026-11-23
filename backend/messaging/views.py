@@ -30,12 +30,11 @@ class ConversationMessagesView(APIView):
         if before:
             messages_qs = messages_qs.filter(created_at__lt=before)
 
-        # Retrieve the latest 'limit' messages, ordered chronologically
         messages = list(messages_qs.order_by('-created_at')[:limit])
         messages.reverse()
 
         serializer = MessageSerializer(messages, many=True, context={'request': request})
-        
+
         has_more = False
         if messages:
             earliest_time = messages[0].created_at
@@ -75,7 +74,6 @@ class ConversationMessagesView(APIView):
                 idempotency_key=idempotency_key
             )
 
-            # Create 'sent' status receipt for other members
             other_members = conversation.memberships.exclude(user=request.user)
             receipts = [
                 MessageReceipt(
@@ -88,11 +86,9 @@ class ConversationMessagesView(APIView):
             if receipts:
                 MessageReceipt.objects.bulk_create(receipts)
 
-            # Update conversation updated_at
             conversation.updated_at = timezone.now()
             conversation.save(update_fields=['updated_at'])
 
-            # Update sender's last_read_at
             ConversationMember.objects.filter(
                 conversation=conversation,
                 user=request.user
@@ -155,14 +151,12 @@ class MessageReadView(APIView):
         )
         now = timezone.now()
 
-        # Update receipt for this message
         MessageReceipt.objects.update_or_create(
             message=message,
             user=request.user,
             defaults={'status': 'read', 'timestamp': now}
         )
 
-        # Mark all unread messages in this conversation up to this message as read
         unread_receipts = MessageReceipt.objects.filter(
             message__conversation=message.conversation,
             user=request.user,
@@ -170,7 +164,6 @@ class MessageReadView(APIView):
         ).exclude(status='read')
         unread_receipts.update(status='read', timestamp=now)
 
-        # Update conversation member's last_read_at
         ConversationMember.objects.filter(
             conversation=message.conversation,
             user=request.user

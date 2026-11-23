@@ -73,7 +73,6 @@ class ConversationListSerializer(serializers.ModelSerializer):
                     return request.build_absolute_uri(obj.avatar.url)
                 return obj.avatar.url
             return None
-        # For direct chats, return the other user's profile picture
         if request and request.user:
             other_membership = obj.memberships.exclude(user=request.user).select_related('user').first()
             if other_membership and other_membership.user and other_membership.user.profile_picture:

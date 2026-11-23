@@ -53,7 +53,6 @@ class AccountsAuthTests(TestCase):
         self.assertEqual(response.data['user']['username'], 'alice')
 
     def test_user_profile_me(self):
-        # Authenticate as alice
         self.client.force_authenticate(user=self.user1)
         url = reverse('auth_me')
         response = self.client.get(url)
@@ -61,7 +60,6 @@ class AccountsAuthTests(TestCase):
         self.assertEqual(response.data['username'], 'alice')
         self.assertEqual(response.data['display_name'], 'Alice Wonderland')
 
-        # Update profile
         update_data = {
             'display_name': 'Alice In Tech',
             'status_message': 'Coding real-time apps'

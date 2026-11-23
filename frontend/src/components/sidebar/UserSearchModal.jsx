@@ -70,7 +70,7 @@ export default function UserSearchModal({ isOpen, onClose }) {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+
         <div
           style={{
             padding: '16px 20px',
@@ -102,7 +102,7 @@ export default function UserSearchModal({ isOpen, onClose }) {
           </button>
         </div>
 
-        {/* Search Input */}
+
         <div style={{ padding: '12px 16px', backgroundColor: 'var(--bg-secondary)' }}>
           <div
             style={{
@@ -134,7 +134,7 @@ export default function UserSearchModal({ isOpen, onClose }) {
           </div>
         </div>
 
-        {/* User list */}
+
         <div
           style={{
             flex: 1,

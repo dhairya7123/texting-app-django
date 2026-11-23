@@ -19,12 +19,12 @@ export default function MessageList({
 
   const isGroup = conversation.type === 'group';
 
-  // Typing state for this conversation
+
   const convTyping = typingMap[conversation.id] || {};
   const typingUsernames = Object.values(convTyping);
   const isSomeoneTyping = typingUsernames.length > 0;
 
-  // Scroll to bottom on initial load or new messages (if user was already near bottom)
+
   useEffect(() => {
     if (!bottomRef.current || !containerRef.current) return;
     const container = containerRef.current;
@@ -36,7 +36,7 @@ export default function MessageList({
     }
   }, [messages.length, isSomeoneTyping]);
 
-  // Handle scroll up for earlier messages pagination
+
   const handleScroll = () => {
     if (!containerRef.current || isLoading || !hasMore) return;
     if (containerRef.current.scrollTop === 0) {
@@ -45,7 +45,7 @@ export default function MessageList({
     }
   };
 
-  // Preserve scroll position after loading earlier messages
+
   useEffect(() => {
     if (containerRef.current && prevScrollHeightRef.current > 0) {
       const addedHeight = containerRef.current.scrollHeight - prevScrollHeightRef.current;
@@ -54,7 +54,7 @@ export default function MessageList({
     }
   }, [messages]);
 
-  // Group messages by calendar date
+
   const groupMessagesByDate = (msgs) => {
     const groups = [];
     let currentDate = null;
@@ -100,7 +100,7 @@ export default function MessageList({
         flexDirection: 'column',
       }}
     >
-      {/* Load More indicator */}
+
       {hasMore && (
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px' }}>
           {isLoading ? (
@@ -164,7 +164,7 @@ export default function MessageList({
         );
       })}
 
-      {/* Typing Bubble */}
+
       {isSomeoneTyping && (
         <div
           style={{

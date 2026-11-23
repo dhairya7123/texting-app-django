@@ -72,7 +72,7 @@ export default function ProfileModal({ isOpen, onClose }) {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+
         <div
           style={{
             padding: '16px 20px',
@@ -102,7 +102,7 @@ export default function ProfileModal({ isOpen, onClose }) {
         </div>
 
         <form onSubmit={handleSave} style={{ padding: '24px 20px' }}>
-          {/* Avatar Upload */}
+
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
             <div style={{ position: 'relative', cursor: 'pointer' }} onClick={() => fileInputRef.current?.click()}>
               <Avatar src={previewUrl} name={displayName || user?.username} size="xl" />

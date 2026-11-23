@@ -7,7 +7,7 @@ export default function ChatHeader({ conversation, onOpenGroupInfo }) {
   const { onlineMap, lastSeenMap, typingMap, setSidebarOpen } = useChatStore();
   const isGroup = conversation.type === 'group';
 
-  // Online status for 1-1 chat
+
   let isOnline = false;
   let lastSeenText = '';
 
@@ -28,7 +28,7 @@ export default function ChatHeader({ conversation, onOpenGroupInfo }) {
     lastSeenText = `${count} members`;
   }
 
-  // Check if someone is currently typing in this conversation
+
   const convTyping = typingMap[conversation.id] || {};
   const typingUsernames = Object.values(convTyping);
   const isSomeoneTyping = typingUsernames.length > 0;
@@ -52,7 +52,7 @@ export default function ChatHeader({ conversation, onOpenGroupInfo }) {
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        {/* Back button for mobile */}
+
         <button
           onClick={() => setSidebarOpen(true)}
           className="mobile-back-btn"
@@ -71,7 +71,7 @@ export default function ChatHeader({ conversation, onOpenGroupInfo }) {
           <ArrowLeft size={20} />
         </button>
 
-        {/* Avatar & Title */}
+
         <div
           onClick={isGroup ? onOpenGroupInfo : undefined}
           style={{
@@ -116,7 +116,7 @@ export default function ChatHeader({ conversation, onOpenGroupInfo }) {
         </div>
       </div>
 
-      {/* Action buttons */}
+
       <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
         {isGroup && (
           <button

@@ -48,7 +48,6 @@ class AttachmentTests(TestCase):
         self.assertIn('file_url', response.data)
 
     def test_upload_attachment_unauthorized_user(self):
-        # user2 is not in conversation
         self.client.force_authenticate(user=self.user2)
         url = reverse('attachment_upload')
 

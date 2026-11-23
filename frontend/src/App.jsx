@@ -25,7 +25,7 @@ export default function App() {
   const { checkAuth } = useAuthStore();
 
   useEffect(() => {
-    // Listen for 401 unhandled auth logout events
+
     const handleLogout = () => {
       window.location.href = '/login';
     };

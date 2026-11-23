@@ -27,7 +27,7 @@ class WebSocketService {
     this.isConnecting = true;
 
     try {
-      // 1. Request secure one-time ticket from backend
+
       const res = await api.post('/auth/ws-ticket/');
       const ticket = res.data.ticket;
 
@@ -56,7 +56,7 @@ class WebSocketService {
         this.isConnecting = false;
         this.emit('connection.close', { code: event.code, reason: event.reason });
         if (event.code !== 4001) {
-          // Reconnect with backoff unless explicitly unauthorized
+
           this.scheduleReconnect();
         }
       };
@@ -126,7 +126,7 @@ class WebSocketService {
     }
   }
 
-  // Helper send methods
+
   sendMessage(conversationId, text, idempotencyKey = null, attachmentIds = []) {
     return this.send({
       type: 'message.send',

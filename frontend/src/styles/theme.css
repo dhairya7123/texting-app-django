@@ -1,0 +1,126 @@
+:root {
+  /* WhatsApp-inspired Theme Tokens */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  
+  /* Light Theme */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f0f2f5;
+  --bg-panel: #f7f8fa;
+  --bg-active: #ebebeb;
+  --bg-hover: #f5f6f6;
+  --bg-chat: #efeae2;
+  --bg-chat-pattern: url('data:image/svg+xml;utf8,<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><g fill="%23dad3cc" fill-opacity="0.3" fill-rule="evenodd"><path d="M0 40L40 0H20L0 20M40 40V20L20 40"/></g></svg>');
+
+  --text-primary: #111b21;
+  --text-secondary: #667781;
+  --text-muted: #8696a0;
+
+  --accent-primary: #00a884;
+  --accent-primary-hover: #02906f;
+  --accent-secondary: #008069;
+  
+  --border-subtle: #e9edef;
+  --border-strong: #d1d7db;
+
+  /* Bubbles */
+  --bubble-outgoing: #d9fdd3;
+  --bubble-outgoing-text: #111b21;
+  --bubble-incoming: #ffffff;
+  --bubble-incoming-text: #111b21;
+  --bubble-meta: #667781;
+
+  /* Status Colors */
+  --status-sent: #8696a0;
+  --status-delivered: #8696a0;
+  --status-read: #53bdeb;
+  --online-dot: #25d366;
+  --danger: #ea4335;
+  --danger-hover: #d93025;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(11, 20, 26, 0.08);
+  --shadow-md: 0 4px 12px rgba(11, 20, 26, 0.12);
+  --shadow-lg: 0 12px 28px rgba(11, 20, 26, 0.2);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+}
+
+[data-theme='dark'] {
+  --bg-primary: #111b21;
+  --bg-secondary: #202c33;
+  --bg-panel: #182229;
+  --bg-active: #2a3942;
+  --bg-hover: #202c33;
+  --bg-chat: #0b141a;
+  --bg-chat-pattern: url('data:image/svg+xml;utf8,<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><g fill="%23182229" fill-opacity="0.6" fill-rule="evenodd"><path d="M0 40L40 0H20L0 20M40 40V20L20 40"/></g></svg>');
+
+  --text-primary: #e9edef;
+  --text-secondary: #8696a0;
+  --text-muted: #667781;
+
+  --accent-primary: #00a884;
+  --accent-primary-hover: #02906f;
+  --accent-secondary: #00a884;
+
+  --border-subtle: #222e35;
+  --border-strong: #374248;
+
+  /* Bubbles */
+  --bubble-outgoing: #005c4b;
+  --bubble-outgoing-text: #e9edef;
+  --bubble-incoming: #202c33;
+  --bubble-incoming-text: #e9edef;
+  --bubble-meta: #8696a0;
+
+  --status-sent: #8696a0;
+  --status-delivered: #8696a0;
+  --status-read: #53bdeb;
+  --online-dot: #00a884;
+  --danger: #ef5350;
+  --danger-hover: #e53935;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.6);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
